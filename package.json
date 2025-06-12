@@ -1,0 +1,37 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "Starting a chat web app using AWS. Getting into cloud computing this summer.",
+  "main": "aws-exports.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-amplify/datastore": "^5.0.83",
+    "@aws-amplify/ui-react": "^6.11.2",
+    "aws-amplify": "^6.15.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "react-scripts": "^5.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
