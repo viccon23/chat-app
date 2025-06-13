@@ -1,0 +1,131 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'VT323', monospace;
+    background-color: #000000;
+    color: #00ff37;
+    font-size: 1.2em;
+}
+
+.AppContainer {
+    width: 90%;
+    margin: 70px auto;
+    padding: 20px;
+    border: 1px solid #00ff37;
+    box-shadow: 0 0 15px #00ff37;
+    height: 90vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.Title {
+    font-size: 5em; 
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #00ff37;
+    text-shadow: 0 0 5px #00ff37;
+}
+
+.UserInfo {
+    text-align: right;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.SignOutButton,
+.SendMessageButton {
+    background-color: transparent;
+    color: #00ff37;
+    border: 1px solid #00ff37;
+    padding: 8px 15px;
+    font-family: 'VT323', monospace;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    margin-left: 10px;
+}
+
+.SignOutButton:hover,
+.SendMessageButton:hover {
+    background-color: #00ff37;
+    color: #000000;
+}
+
+.MessageList {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid #005c13;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #050505;
+    min-height: 100px;
+
+    /* Scrollbar styling for WebKit browsers (Chrome, Safari, Edge) */
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #080808;
+        border-left: 1px solid #005c13;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #00ff37;
+        border-radius: 0px;
+        border: 1px solid #005c13;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #33ff57;
+    }
+
+    /* Scrollbar styling for Firefox */
+    scrollbar-width: thin; 
+    scrollbar-color: #00ff37 #080808;
+}
+
+.MessageItem {
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.MessageItem strong {
+    color: #33ff57;
+}
+
+.MessageItem em {
+    font-size: 0.8em;
+    color: #00801b;
+    margin-left: 5px;
+}
+
+.MessageForm {
+    display: flex;
+}
+
+.MessageInput {
+    flex-grow: 1;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 1.5em;
+    background-color: #111111;
+    color: #00ff37;
+    border: 1px solid #00ff37;
+    margin-right: 10px;
+}
+
+.MessageInput::placeholder {
+    color: #00801b;
+}
+
+.MessageInput:focus {
+    outline: none;
+    box-shadow: 0 0 8px #00ff37;
+}

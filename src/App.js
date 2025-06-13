@@ -4,6 +4,7 @@ import { Amplify } from 'aws-amplify'; // Changed to named import
 import { DataStore } from '@aws-amplify/datastore'; // Import DataStore from its own package
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
+import './models/App.css';
 
 import { Message } from './models'; // Import the Message model
 
@@ -22,7 +23,7 @@ function App({ signOut, user }) {
 
     const subscription = DataStore.observe(Message).subscribe(msg => {
       console.log('DataStore observation:', msg);
-      if (msg.opType === 'CREATE') {
+      if (msg.opType === 'INSERT') {
         setMessages((prevMessages) => [...prevMessages, msg.element]);
       }
       // Might add UPDATE and DELETE handling in the future, idk.
@@ -69,27 +70,31 @@ function App({ signOut, user }) {
   };
 
   return (
-    <div>
-      <h1>Chat App</h1>
-      <div>Hello, {user.username}</div>
-      <button onClick={signOut}>Sign Out</button>
+    <div className="AppContainer"> {/* Added AppContainer */}
+      <div className="UserInfo"> {/* Added UserInfo wrapper */}
+        Hello, {user.username}
+        <button onClick={signOut} className="SignOutButton">Sign Out</button>
+      </div>
+      <h1 className="Title">Miscord</h1> {/* Changed class to className */}
 
-      <div style={{ height: '300px', overflowY: 'scroll', border: '1px solid #ccc', marginBottom: '10px', padding: '5px' }}>
+
+      <div className="MessageList"> {/* Changed style to className */}
         {messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((msg) => (
-          <div key={msg.id}>
+          <div key={msg.id} className="MessageItem"> {/* Added MessageItem className */}
             <strong>{msg.sender}:</strong> {msg.content} <em>({new Date(msg.createdAt).toLocaleTimeString()})</em>
           </div>
         ))}
       </div>
 
-      <form onSubmit={handleSendMessage}>
+      <form onSubmit={handleSendMessage} className="MessageForm"> {/* Added MessageForm className */}
         <input
           type="text"
           value={messageContent}
           onChange={(e) => setMessageContent(e.target.value)}
-          placeholder="Type your message"
+          placeholder="> type your message..." // Hacker-ish placeholder
+          className="MessageInput" // Added MessageInput className
         />
-        <button type="submit">Send</button>
+        <button type="submit" className="SendMessageButton">Send</button>
       </form>
     </div>
   );
