@@ -14,6 +14,7 @@ Amplify.configure(awsExports);
 function App({ signOut, user }) {
   const [messages, setMessages] = useState([]);
   const [messageContent, setMessageContent] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   // useEffect will fetch initial messages when component mounts, and set up the GraphQL subscription to onCreateMessage.
   // When a new message is created, it will be added to the messages state.
@@ -35,12 +36,15 @@ function App({ signOut, user }) {
   // An async function to get existing messages using API.graphql with the listMessages query.
   const fetchMessages = async () => {
     try {
+      setIsLoading(true);
       // Query messages from the DataStore
       const fetchedMessages = await DataStore.query(Message);
       setMessages(fetchedMessages);
     }
     catch (err) {
       console.log('error fetching messages:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -70,29 +74,33 @@ function App({ signOut, user }) {
   };
 
   return (
-    <div className="AppContainer"> {/* Added AppContainer */}
-      <div className="UserInfo"> {/* Added UserInfo wrapper */}
+    <div className="AppContainer">
+      <div className="UserInfo">
         Hello, {user.username}
         <button onClick={signOut} className="SignOutButton">Sign Out</button>
       </div>
-      <h1 className="Title">Miscord</h1> {/* Changed class to className */}
+      <h1 className="Title">Miscord</h1>
 
 
-      <div className="MessageList"> {/* Changed style to className */}
-        {messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((msg) => (
-          <div key={msg.id} className="MessageItem"> {/* Added MessageItem className */}
-            <strong>{msg.sender}:</strong> {msg.content} <em>({new Date(msg.createdAt).toLocaleTimeString()})</em>
-          </div>
-        ))}
+      <div className="MessageList">
+        {isLoading ? (
+          <div>Loading messages...</div>
+        ) : (
+          messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((msg) => (
+            <div key={msg.id} className="MessageItem">
+              <strong>{msg.sender}:</strong> {msg.content} <em>({new Date(msg.createdAt).toLocaleTimeString()})</em>
+            </div>
+          ))
+        )}
       </div>
 
-      <form onSubmit={handleSendMessage} className="MessageForm"> {/* Added MessageForm className */}
+      <form onSubmit={handleSendMessage} className="MessageForm">
         <input
           type="text"
           value={messageContent}
           onChange={(e) => setMessageContent(e.target.value)}
-          placeholder="> type your message..." // Hacker-ish placeholder
-          className="MessageInput" // Added MessageInput className
+          placeholder="> type your message..." 
+          className="MessageInput"
         />
         <button type="submit" className="SendMessageButton">Send</button>
       </form>
