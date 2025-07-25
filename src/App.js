@@ -1,12 +1,12 @@
-// filepath: src/App.js
 import React, { useEffect, useState } from 'react';
-import { Amplify } from 'aws-amplify'; // Changed to named import
-import { DataStore } from '@aws-amplify/datastore'; // Import DataStore from its own package
+import { Amplify } from 'aws-amplify';
+import { Hub } from '@aws-amplify/core';
+import { DataStore } from '@aws-amplify/datastore';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import './models/App.css';
 
-import { Message } from './models'; // Import the Message model
+import { Message } from './models';
 
 import awsExports from './aws-exports';
 Amplify.configure(awsExports);
@@ -15,11 +15,39 @@ function App({ signOut, user }) {
   const [messages, setMessages] = useState([]);
   const [messageContent, setMessageContent] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState('Connecting...');
 
   // useEffect will fetch initial messages when component mounts, and set up the GraphQL subscription to onCreateMessage.
   // When a new message is created, it will be added to the messages state.
   // The subscription is cleaned up when the component unmounts to prevent memory leaks.
   useEffect(() => {
+    // Listen to DataStore hub events for connection status
+    const hubListener = Hub.listen('datastore', async (hubData) => {
+      const { event } = hubData.payload;
+
+      switch (event) {
+        case 'ready':
+          setConnectionStatus('Connected');
+          console.log('DataStore is ready');
+          break;
+        case 'networkStatus':
+          if (hubData.payload.active) {
+            setConnectionStatus('Connected');
+          } else {
+            setConnectionStatus('OFFLINE');
+          }
+          break;
+        case 'syncQueriesStarted':
+          setConnectionStatus('Syncing...');
+          break;
+        case 'syncQueriesReady':
+          setConnectionStatus('Connected');
+          break;
+        default:
+          break;
+      }
+    });
+
     fetchMessages();
 
     const subscription = DataStore.observe(Message).subscribe(msg => {
@@ -30,7 +58,10 @@ function App({ signOut, user }) {
       // Might add UPDATE and DELETE handling in the future, idk.
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      hubListener();
+    };
   }, []);
 
   // An async function to get existing messages using API.graphql with the listMessages query.
@@ -76,8 +107,14 @@ function App({ signOut, user }) {
   return (
     <div className="AppContainer">
       <div className="UserInfo">
-        Hello, {user.username}
-        <button onClick={signOut} className="SignOutButton">Sign Out</button>
+        <div className="StatusIndicator">
+          <span className={`status-dot ${connectionStatus.replace(/\./g, '').replace(' ', '-')}`}></span>
+          <span className="status-text">{connectionStatus}</span>
+        </div>
+        <div className="UserGreeting">
+          Hello, {user.username}
+          <button onClick={signOut} className="SignOutButton">Sign Out</button>
+        </div>
       </div>
       <h1 className="Title">Miscord</h1>
 

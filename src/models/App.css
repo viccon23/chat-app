@@ -33,9 +33,64 @@ body {
 }
 
 .UserInfo {
-    text-align: right;
+    text-shadow: 0 0 5px #00ff37;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
     font-size: 1.1em;
+}
+
+.StatusIndicator {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    color: #00ff37;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    display: inline-block;
+}
+
+.status-dot.connected {
+    background-color: #00ff37;
+    box-shadow: 0 0 4px #00ff37;
+}
+
+.status-dot.connecting,
+.status-dot.syncing {
+    background-color: #ffaa00;
+    box-shadow: 0 0 4px #ffaa00;
+    animation: pulse 1.5s infinite;
+}
+
+.status-dot.offline {
+    background-color: #ff4444;
+    box-shadow: 0 0 4px #ff4444;
+}
+
+.status-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 1.1em;
+    font-family: 'VT323', monospace;
+    
+}
+
+.UserGreeting {
+    text-align: right;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
 .SignOutButton,
